@@ -2,7 +2,7 @@
 
 Bakes final and preview lighting using your GPU.
 
-It replaces the lighting compilers (`vrad3.exe` and `vrad.exe`) with wrappers that do the lighting on your graphics card. Anything the GPU can't do will fall back to the CPU.
+It replaces the lighting compilers (`vrad3.exe` and `vrad2.exe`) with wrappers that do the lighting on your graphics card. Anything the GPU can't do will fall back to the CPU.
 
 Unofficial, not affiliated with Valve. Contains no Valve code.
 
@@ -12,8 +12,6 @@ Unofficial, not affiliated with Valve. Contains no Valve code.
   or newer. If you do not have a suitable GPU everything falls back to the CPU.
 - HLA build: The current Steam version or `previous_release`. With any other
   build everything runs on the CPU.
-- RAM: an 8K lightmap needs about 9 GB per block with the default settings. 4K needs about
-  a quarter of that.
 
 ## What's in the download
 - `vrad3.exe`: the GPU lighting compiler
@@ -85,8 +83,8 @@ You can also verify your game files through Steam to redownload original files.
 
 ## After a Steam update
 Steam may put Valve's `vrad3.exe` and other files back (this also happens when you verify
-the game files). Run Setup again to reinstall. The denoiser and Embree files have to be
-copied again by hand.
+the game files). Run Setup again to reinstall. The denoiser and Embree shouldn't be removed by a Steam update or verifying files,
+but if they somehow are, then you'll have to copy them back.
 
 ## Settings
 Run `vrad3_settings.exe` from game\bin\win64 to easily customize the compiler to your liking,
