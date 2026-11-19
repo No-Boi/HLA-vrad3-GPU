@@ -1,4 +1,4 @@
-# Builds the full release set: GPU vrad3.exe, vrad3_settings.exe and the vrad2.exe shim, into dist.
+# Builds the full release set: GPU vrad3.exe, vrad3_settings.exe, the vrad2.exe shim and the OpenImageDenoise.dll shim, into dist.
 param(
     [string]$VisualStudio = '',   # blank = find automatically
     [string]$Dxc = ''             # blank = find automatically
@@ -80,3 +80,4 @@ try {
 } finally { Pop-Location }
 Copy-Item -LiteralPath (Join-Path $buildDir 'vrad2.exe') -Destination (Join-Path $dist 'vrad2.exe')
 Copy-Item -LiteralPath (Join-Path $taskRoot 'setup\Setup.cmd'),(Join-Path $taskRoot 'setup\Setup.ps1') -Destination $dist
+& (Join-Path $PSScriptRoot 'oidn_shim\Build-OidnShim.ps1') -VisualStudio $VisualStudio

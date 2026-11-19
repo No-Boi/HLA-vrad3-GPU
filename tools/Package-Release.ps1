@@ -1,5 +1,5 @@
 # Packages dist\ into artifacts\release: the download zip, SHA256SUMS.txt and the release notes.
-# Run after Build.cmd and tools\oidn_shim\Build-OidnShim.ps1.
+# Run after Build.cmd.
 param(
     [string]$Commit = $env:GITHUB_SHA   # blank = ask git
 )

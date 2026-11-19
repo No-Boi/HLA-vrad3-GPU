@@ -40,7 +40,6 @@ jobs:
         run: |
           .\tools\Build-SingleExe.ps1
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          .\tools\oidn_shim\Build-OidnShim.ps1
 
       - name: Package
         shell: powershell

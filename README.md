@@ -123,8 +123,6 @@ You need Visual Studio 2022 or newer (or its free Build Tools) with the
 Run `Build.cmd`. The files are written to `dist\`. If Visual Studio or the SDK isn't found
 automatically, pass them with: `Build.cmd -VisualStudio <folder> -Dxc <path to dxc.exe>`.
 
-The denoiser DLL is built separately by `tools\oidn_shim\Build-OidnShim.ps1`.
-
 ## License
 Open Image Denoise and Embree are Intel's (Apache-2.0) and are not included.
 `tools/sample_exact.h` contains steps from Microsoft's STL `std::sort` (Apache-2.0 WITH LLVM-exception).

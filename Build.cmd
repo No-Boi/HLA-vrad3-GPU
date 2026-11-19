@@ -1,5 +1,5 @@
 @echo off
-rem Builds dist\vrad3.exe. Visual Studio and the Windows SDK are found automatically.
+rem Builds dist\: vrad3.exe, vrad3_settings.exe, vrad2.exe and oidn-shim\OpenImageDenoise.dll. Visual Studio and the Windows SDK are found automatically.
 rem Optional arguments are passed through, e.g.
 rem   Build.cmd -VisualStudio "D:\VS\BuildTools" -Dxc "C:\path\to\dxc.exe"
 setlocal
