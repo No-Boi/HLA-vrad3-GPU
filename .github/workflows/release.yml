@@ -64,5 +64,7 @@ jobs:
         run: |
           $flags = @('--draft', '--target', $env:GITHUB_SHA, '--title', "GPU vrad3 $env:VERSION", '--notes-file', 'artifacts/release/notes.md')
           if ($env:VERSION -like '*-*') { $flags += '--prerelease' }
-          gh release create "v$env:VERSION" @flags (Get-ChildItem artifacts/release -File -Exclude notes.md).FullName
+          $assets = @((Get-ChildItem artifacts/release/* -File -Exclude notes.md).FullName)
+          if ($assets.Count -ne 3) { throw "Expected 3 release files in artifacts/release, found $($assets.Count)" }
+          gh release create "v$env:VERSION" @flags @assets
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
