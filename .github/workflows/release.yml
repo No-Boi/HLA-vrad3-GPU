@@ -1,0 +1,68 @@
+# Builds everything from the chosen commit and makes a DRAFT GitHub release for v<VERSION>.
+# Start it from the Actions tab (Run workflow). Nothing is published until someone presses Publish.
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write       # create the draft release and its tag
+  id-token: write       # build attestation
+  attestations: write
+
+jobs:
+  release:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version
+        id: version
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = (Get-Content VERSION -Raw).Trim()
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$') { throw "VERSION '$version' isn't a version like 0.1.0 or 0.1.0-beta1" }
+          gh release view "v$version" *> $null
+          if ($LASTEXITCODE -eq 0) { throw "Release v$version already exists. Raise VERSION first." }
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Check Setup.ps1 parses
+        shell: powershell
+        run: |
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile("$PWD\setup\Setup.ps1", [ref]$null, [ref]$errors) | Out-Null
+          if ($errors) { $errors | ForEach-Object { Write-Host $_ }; exit 1 }
+
+      - name: Build
+        shell: powershell
+        run: |
+          .\tools\Build-SingleExe.ps1
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          .\tools\oidn_shim\Build-OidnShim.ps1
+
+      - name: Package
+        shell: powershell
+        run: .\tools\Package-Release.ps1
+
+      - name: Attest
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            artifacts/release/vrad3-gpu-*.zip
+            dist/vrad3.exe
+            dist/vrad2.exe
+            dist/vrad3_settings.exe
+            dist/oidn-shim/OpenImageDenoise.dll
+
+      - name: Draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          $flags = @('--draft', '--target', $env:GITHUB_SHA, '--title', "GPU vrad3 $env:VERSION", '--notes-file', 'artifacts/release/notes.md')
+          if ($env:VERSION -like '*-*') { $flags += '--prerelease' }
+          gh release create "v$env:VERSION" @flags (Get-ChildItem artifacts/release -File -Exclude notes.md).FullName
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
