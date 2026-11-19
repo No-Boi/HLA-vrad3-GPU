@@ -27,6 +27,7 @@ jobs:
           gh release view "v$version" *> $null
           if ($LASTEXITCODE -eq 0) { throw "Release v$version already exists. Raise VERSION first." }
           "version=$version" >> $env:GITHUB_OUTPUT
+          exit 0
 
       - name: Check Setup.ps1 parses
         shell: powershell
