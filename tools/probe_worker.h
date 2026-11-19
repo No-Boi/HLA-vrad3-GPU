@@ -35,7 +35,7 @@ static bool probeGpuStage(const CONTEXT& context,const std::vector<std::wstring>
     progressWindow.status(L"GPU light probes");
     ULONGLONG started=GetTickCount64();
     ProbeArguments args=probeArguments(context);
-    if(setting==ProbeSetting::Auto) {
+    if(setting==ProbeSetting::Auto && emissiveSetting()<=0) {
         uint64_t cells=1; for(int i=0;i<3;++i) cells*=args.end[i]-args.start[i];
         if(cells*args.samples<probeMinimumPaths())
             throw std::runtime_error("small volume: CPU probes are cheaper than GPU setup (light_probes=on forces GPU)");
