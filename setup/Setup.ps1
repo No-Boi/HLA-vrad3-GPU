@@ -164,7 +164,7 @@ function UninstallTool([string]$name) {
         'ours'          { Remove-Item -LiteralPath $current -Force; Move-Item -LiteralPath $real -Destination $current; Say "  $name.exe: Valve's original restored" Green }
         'ours-old'      { Remove-Item -LiteralPath $current -Force; Move-Item -LiteralPath $real -Destination $current; Say "  $name.exe: Valve's original restored" Green }
         'valve-renamed' { Move-Item -LiteralPath $real -Destination $current; Say "  $name.exe: Valve's original restored" Green }
-        'valve+stale'   { Remove-Item -LiteralPath $real -Force; Say "  $name.exe: already Valve's; removed the old ${name}_real.exe" Green }
+        'valve+stale'   { Remove-Item -LiteralPath $real -Force; Say "  $name.exe: already Valve's - removed the old ${name}_real.exe" Green }
         'valve'         { Say "  $name.exe: already Valve's" }
         'missing'       { Say "  $name.exe: not found" Yellow }
         'broken'        { Say "  $name.exe: left alone, ${name}_real.exe is missing or isn't Valve's. Verify the game files in Steam" Yellow }
@@ -188,7 +188,7 @@ function EnsureWritable {
 Get-ChildItem -LiteralPath $here -File | Unblock-File -ErrorAction SilentlyContinue
 
 foreach ($file in 'vrad3.exe', 'vrad2.exe', 'vrad3_settings.exe') {
-    if (-not (Test-Path -LiteralPath (Join-Path $here $file))) { Fail "$file is missing next to Setup. Extract the whole zip first" }
+    if (-not (Test-Path -LiteralPath (Join-Path $here $file))) { Fail "$file is missing next to Setup. Make sure the zip file is fully extracted." }
 }
 
 if ($GameBin) {
@@ -239,11 +239,11 @@ switch ($Action) {
         PutFile (Join-Path $here 'vrad3_settings.exe') (Join-Path $GameBin 'vrad3_settings.exe')
         $example = Join-Path $here 'vrad3_gpu.example.ini'
         if (Test-Path -LiteralPath $example) { PutFile $example (Join-Path $GameBin 'vrad3_gpu.example.ini') }
-        Say '  vrad3_settings.exe installed (settings window; no settings are needed)' Green
+        Say '  vrad3_settings.exe installed' Green
         Say ''
         ShowStatus
         Say ''
-        Say 'Done. Compile in Hammer as usual; the end of the output names the graphics card used.'
+        Say 'Done. Compile in Hammer as usual.'
         Say 'After a Steam update, run Setup again.'
         Finish 0
     }
